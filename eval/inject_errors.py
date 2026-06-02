@@ -161,7 +161,8 @@ def generate(seed: int = 17, *, source_path: str | Path = "tests/ground_truth/40
     v = _clone(gt)
     u = _find(v["units"], "W6")
     u["panels"][0]["egress"] = True
-    u["panels"][0]["glass"] = "annealed"        # egress + ANN under R308.4 = needs flag
+    u["panels"][0]["glass"] = "annealed"
+    u["tempered_required"] = True              # marker: R308.4 hazard location identified
     out.append({
         "variant_id": "v09_egress_tempered_conflict",
         "data": v,
