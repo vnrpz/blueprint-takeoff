@@ -18,7 +18,7 @@ EXPECTED = {
     "3122":  "3122_Lyndale.pdf",
 }
 
-MAX_BYTES = 50 * 1024 * 1024
+MAX_BYTES = 120 * 1024 * 1024  # 120 MB to accept 81 MB blueprint.pdf
 
 
 def main(argv=None) -> int:

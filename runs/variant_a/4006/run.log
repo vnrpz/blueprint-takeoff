@@ -1,0 +1,6 @@
+{"page": 75, "elapsed": 4.1, "error": null, "raw_len": 14, "in_tok": 2408, "out_tok": 6}
+{"page": 91, "elapsed": 4.5, "error": null, "raw_len": 1100, "in_tok": 2408, "out_tok": 369}
+{"page": 93, "elapsed": 4.4, "error": null, "raw_len": 551, "in_tok": 2408, "out_tok": 186}
+{"page": 94, "elapsed": 2.8, "error": null, "raw_len": 14, "in_tok": 2408, "out_tok": 6}
+{"page": 125, "elapsed": 6.7, "error": null, "raw_len": 2184, "in_tok": 2408, "out_tok": 722}
+{"page": 133, "elapsed": 3.5, "error": null, "raw_len": 586, "in_tok": 2408, "out_tok": 207}

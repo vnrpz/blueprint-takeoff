@@ -47,7 +47,7 @@ def page_is_vector(page) -> bool:
 def rasterize(
     pdf_path: str | os.PathLike,
     out_dir: str | os.PathLike,
-    dpi: int = 300,
+    dpi: int = 100,
     pages: Optional[List[int]] = None,
 ) -> List[PageImage]:
     """Rasterize all (or selected) pages to PNG at the given DPI."""

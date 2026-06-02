@@ -59,8 +59,10 @@ def _pick_winner(rows: List[Dict]) -> Optional[Dict]:
 
 
 def run(variants: List[str], models: List[str], projects: List[str],
-        out_csv: str = "runs/leaderboard.csv", out_html: str = "runs/leaderboard.html") -> List[Dict]:
+        out_csv: str = "runs/leaderboard.csv", out_html: str = "runs/leaderboard.html",
+        budget_usd: float = 0.0) -> List[Dict]:
     rows: List[Dict] = []
+    spent = 0.0
     for variant_letter in variants:
         Cls = VARIANTS[variant_letter]
         for model_spec in models:
@@ -99,6 +101,17 @@ def run(variants: List[str], models: List[str], projects: List[str],
                     metrics = evaluate(result.units, gt_units, gt_frames_total=_frames_total(gt_path))
                     row.update(metrics.to_dict())
                 rows.append(row)
+                spent += float(row.get("cost_usd") or 0)
+                if budget_usd and spent >= budget_usd:
+                    rows.append({"variant": "*", "model": "*", "project": "*",
+                                 "error": f"budget cap ${budget_usd} hit; spent ${spent:.2f}"})
+                    break
+            else:
+                continue
+            break
+        else:
+            continue
+        break
     Path(out_csv).parent.mkdir(parents=True, exist_ok=True)
     if rows:
         fields = sorted({k for r in rows for k in r.keys()})
@@ -145,12 +158,14 @@ def main(argv=None) -> int:
     ap.add_argument("--projects", default="4006,745,321,1729,3122")
     ap.add_argument("--out-csv", default="runs/leaderboard.csv")
     ap.add_argument("--out-html", default="runs/leaderboard.html")
+    ap.add_argument("--budget-usd", type=float, default=0.0, help="Hard cap; 0 = no cap.")
     args = ap.parse_args(argv)
     rows = run(
         variants=args.variants.split(","),
         models=args.models.split(","),
         projects=args.projects.split(","),
         out_csv=args.out_csv, out_html=args.out_html,
+        budget_usd=args.budget_usd,
     )
     print(f"Wrote {args.out_csv} ({len(rows)} rows)")
     return 0
