@@ -54,7 +54,9 @@ class Pipeline(abc.ABC):
 
 EXTRACTION_PROMPT = """You are an expert window & door takeoff specialist.
 Examine the image (a page from a construction PDF blueprint) and extract EVERY
-window and door visible. Be conservative — do not invent items.
+window and door visible. Use the actual marks visible on the drawing (W1, W2,
+D1, U1 etc.); fall back to G1, G2 only if no mark is visible. Return [] only
+if there is truly no window or door content on this page.
 
 Return ONLY a JSON array. Each element matches:
 {
