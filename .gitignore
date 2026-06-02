@@ -16,6 +16,7 @@ runs/**/*.jpg
 runs/**/*.json
 runs/**/*.html
 runs/**/*.csv
+runs/**/*.jsonl
 runs/leaderboard.html
 runs/leaderboard.csv
 !runs/.gitkeep
