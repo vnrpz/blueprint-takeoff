@@ -52,39 +52,10 @@ class Pipeline(abc.ABC):
                 f.write(json.dumps(u.to_dict()) + "\n")
 
 
-EXTRACTION_PROMPT = """You are an expert window & door takeoff specialist.
-Examine the image (a page from a construction PDF blueprint) and extract EVERY
-window and door visible. Use the actual marks visible on the drawing (W1, W2,
-D1, U1 etc.); fall back to G1, G2 only if no mark is visible. Return [] only
-if there is truly no window or door content on this page.
+EXTRACTION_PROMPT = """You are looking at one page from a construction PDF blueprint. Extract every window and door visible. Return ONLY a JSON array (or [] if nothing visible).
 
-Return ONLY a JSON array. Each element matches:
-{
-  "unit_id": "string (use mark from drawing if present, else G{n})",
-  "kind": "window" | "door" | "composite",
-  "panels": [{
-    "role": "window" | "door",
-    "width_in": <decimal inches; convert fractions like '36 3/16' to 36.1875>,
-    "height_in": <decimal inches>,
-    "glass": "tempered" | "annealed" | "mixed" | null,
-    "u_factor": <number> | null,
-    "egress": true | false | null,
-    "clear_opening_sqft": <number> | null
-  }],
-  "qty": <integer>,
-  "source_marks": ["string"],
-  "color_interior": "string" | null,
-  "color_exterior": "string" | null,
-  "rough_opening": {"w_in": <number>, "h_in": <number>} | null,
-  "evidence": [{"page": <int>, "region": "schedule"|"elevation"|"plan"|"notes"|"section", "bbox": [x,y,w,h]}],
-  "confidence": <0..1>,
-  "flags": [],
-  "discovery_gaps": []
-}
+Each element:
+{"unit_id": "W1 etc. from the drawing or G1 fallback", "kind": "window|door|composite", "panels": [{"role": "window|door", "width_in": <decimal inches; convert fractions like '36 3/16' to 36.1875>, "height_in": <decimal>, "glass": "tempered|annealed|mixed" or null, "u_factor": <number> or null, "egress": true|false|null, "clear_opening_sqft": <number> or null}], "qty": <integer>, "source_marks": ["W1"], "evidence": [{"page": 1, "region": "schedule|elevation|plan|notes|section", "bbox": [x,y,w,h]}], "confidence": <0-1>, "flags": [], "discovery_gaps": []}
 
-Rules:
-- All measurements in decimal inches. Parse fractions.
-- For composite units (window+door coupled, corner90 etc.), set kind="composite" and list every panel.
-- If a value is not derivable from THIS page, return null and add to discovery_gaps.
-- Output the JSON array only — no prose.
+Be specific. If you see a window/door, output it. Use the actual marks (W1, W2, D1, U1) visible on the drawing. For composites (window+door coupled, corner90 etc.) set kind="composite" and list every panel. Output the JSON array only — no prose, no fences.
 """
