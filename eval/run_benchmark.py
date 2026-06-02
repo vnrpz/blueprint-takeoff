@@ -25,6 +25,7 @@ from eval.inject_errors import generate as gen_injections, evaluate_flags
 
 PROJECTS = {
     "4006":  "data/raw/blueprint.pdf",
+    "OFR":   "data/raw/4006_N_Sheridan-OFR-0573-2025-2.pdf",
     "745":   "data/raw/745_Tamarack_Trail.pdf",
     "321":   "data/raw/321_Sunset.pdf",
     "1729":  "data/raw/1729_Longvalley.pdf",
