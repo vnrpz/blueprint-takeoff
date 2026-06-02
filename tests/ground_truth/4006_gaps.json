@@ -1,0 +1,16 @@
+{
+  "project": "4006 N Sheridan",
+  "description": "Tier-2 facts that cannot be derived from the blueprint alone. System must flag these as discovery_gaps.",
+  "gaps": [
+    {"id": "hardware_model",       "category": "hardware",   "rationale": "Handle model not on plan; comes from spec book / offer."},
+    {"id": "lock_type",            "category": "hardware",   "rationale": "Single/multi-point lock not on drawing."},
+    {"id": "screen_presence",      "category": "accessories","rationale": "Bug-screen inclusion is offer-level."},
+    {"id": "screen_color",         "category": "accessories","rationale": "Screen colour not specified on plan."},
+    {"id": "interior_color_exact", "category": "finish",     "rationale": "Interior color usually 'paint to match', exact RAL not given."},
+    {"id": "exterior_color_exact", "category": "finish",     "rationale": "If absent on elevations, comes from spec sheet."},
+    {"id": "hand_left_right",      "category": "geometry",   "rationale": "Hand is sometimes implied by elevation but not codified."},
+    {"id": "install_type",         "category": "install",    "rationale": "New construction vs replacement / retrofit detail."},
+    {"id": "grids_or_grilles",     "category": "appearance", "rationale": "Grids/grilles pattern not always shown."},
+    {"id": "warranty_term",        "category": "commercial", "rationale": "Warranty length is offer/contract, not drawing."}
+  ]
+}

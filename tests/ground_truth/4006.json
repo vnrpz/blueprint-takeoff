@@ -1,0 +1,117 @@
+{
+  "project": "4006 N Sheridan",
+  "source": "TZ section 3 (Aurora OFR-0573-2025-2, spec-group level)",
+  "totals": {
+    "units": 230,
+    "frames": 288
+  },
+  "notes": "Hand/mirror folded. (kind, w, h, glass, u_factor bucket 0.01, egress) is the spec-group key. Tier-1 fields only.",
+  "units": [
+    {
+      "unit_id": "W1",
+      "kind": "window",
+      "panels": [{"role": "window", "width_in": 72.5, "height_in": 88.5, "glass": "mixed", "u_factor": 0.24, "egress": true}],
+      "qty": 63,
+      "source_marks": ["W1"]
+    },
+    {
+      "unit_id": "W2",
+      "kind": "window",
+      "panels": [{"role": "window", "width_in": 48.1875, "height_in": 88.5, "glass": "mixed", "u_factor": 0.24, "egress": true}],
+      "qty": 85,
+      "source_marks": ["W2"]
+    },
+    {
+      "unit_id": "W3",
+      "kind": "window",
+      "panels": [{"role": "window", "width_in": 42.0, "height_in": 88.5, "glass": "mixed", "u_factor": 0.23, "egress": true}],
+      "qty": 10,
+      "source_marks": ["W3"]
+    },
+    {
+      "unit_id": "W4",
+      "kind": "window",
+      "panels": [{"role": "window", "width_in": 72.5, "height_in": 68.5, "glass": "annealed", "u_factor": 0.23, "egress": true}],
+      "qty": 4,
+      "source_marks": ["W4"]
+    },
+    {
+      "unit_id": "W5",
+      "kind": "window",
+      "panels": [{"role": "window", "width_in": 32.1875, "height_in": 88.5, "glass": "mixed", "u_factor": 0.24, "egress": true}],
+      "qty": 6,
+      "source_marks": ["W5"]
+    },
+    {
+      "unit_id": "W6",
+      "kind": "window",
+      "panels": [{"role": "window", "width_in": 68.5, "height_in": 88.5, "glass": "tempered", "u_factor": 0.23, "egress": false}],
+      "qty": 1,
+      "source_marks": ["W6"]
+    },
+    {
+      "unit_id": "W7",
+      "kind": "window",
+      "panels": [{"role": "window", "width_in": 124.5, "height_in": 88.5, "glass": "tempered", "u_factor": 0.22, "egress": false}],
+      "qty": 1,
+      "source_marks": ["W7"],
+      "notes_internal": "3 panels in one frame; spec-group treats as one unit"
+    },
+    {
+      "unit_id": "U1",
+      "kind": "composite",
+      "panels": [
+        {"role": "window", "width_in": 36.1875, "height_in": 96.0, "glass": null, "u_factor": 0.23, "egress": false},
+        {"role": "door",   "width_in": 36.1875, "height_in": 96.0, "glass": null, "u_factor": 0.23, "egress": true}
+      ],
+      "qty": 42,
+      "source_marks": ["U1"]
+    },
+    {
+      "unit_id": "U2",
+      "kind": "composite",
+      "panels": [
+        {"role": "window", "width_in": 143.875,  "height_in": 96.0, "glass": null, "u_factor": null, "egress": null},
+        {"role": "window", "width_in": 106.8125, "height_in": 96.0, "glass": null, "u_factor": null, "egress": null},
+        {"role": "door",   "width_in": 36.9375,  "height_in": 96.0, "glass": null, "u_factor": null, "egress": null}
+      ],
+      "qty": 5,
+      "source_marks": ["U2"],
+      "notes_internal": "corner90 assembly"
+    },
+    {
+      "unit_id": "U3",
+      "kind": "composite",
+      "panels": [
+        {"role": "window", "width_in": 18.9375, "height_in": 96.0, "glass": null, "u_factor": 0.25, "egress": null},
+        {"role": "door",   "width_in": 37.4375, "height_in": 96.0, "glass": null, "u_factor": 0.23, "egress": true}
+      ],
+      "qty": 5,
+      "source_marks": ["U3"]
+    },
+    {
+      "unit_id": "U4",
+      "kind": "composite",
+      "panels": [
+        {"role": "window", "width_in": 128.4375, "height_in": 88.5, "glass": null, "u_factor": 0.22, "egress": false},
+        {"role": "window", "width_in": 85.4375,  "height_in": 88.5, "glass": null, "u_factor": 0.22, "egress": false}
+      ],
+      "qty": 1,
+      "source_marks": ["U4"]
+    },
+    {
+      "unit_id": "D1",
+      "kind": "door",
+      "panels": [{"role": "door", "width_in": 40.5, "height_in": 96.0, "glass": null, "u_factor": 0.23, "egress": true}],
+      "qty": 1,
+      "source_marks": ["D1"]
+    },
+    {
+      "unit_id": "D2",
+      "kind": "door",
+      "panels": [{"role": "door", "width_in": 38.375, "height_in": 96.0, "glass": null, "u_factor": 0.23, "egress": true}],
+      "qty": 6,
+      "source_marks": ["D2"]
+    }
+  ]
+}

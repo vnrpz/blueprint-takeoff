@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+.env
+
+# Project
+data/raw/*.pdf
+data/raw/*.PDF
+runs/**/*.png
+runs/**/*.jpg
+runs/**/*.json
+runs/**/*.html
+runs/**/*.csv
+runs/leaderboard.html
+runs/leaderboard.csv
+!runs/.gitkeep
+!data/raw/.gitkeep
+reports/*.pdf
+!reports/.gitkeep
+
+# Credentials
+.env
+credentials.json
+.creds/
+
+# OS
+.DS_Store
+Thumbs.db
