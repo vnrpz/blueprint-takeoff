@@ -78,10 +78,9 @@ class AnthropicProvider(VLMProvider):
         last_err: Exception | None = None
         for attempt in range(self._RETRY_ATTEMPTS):
             try:
-                msg = client.messages.create(
+                kwargs = dict(
                     model=self.model,
                     max_tokens=max_tokens,
-                    temperature=0,
                     messages=[{
                         "role": "user",
                         "content": [
@@ -92,6 +91,10 @@ class AnthropicProvider(VLMProvider):
                         ],
                     }],
                 )
+                # claude-opus-4-8 deprecated `temperature`; older opus still accepts it
+                if not self.model.startswith("claude-opus-4-8"):
+                    kwargs["temperature"] = 0
+                msg = client.messages.create(**kwargs)
                 text = "".join(b.text for b in msg.content if getattr(b, "text", None))
                 in_tok = msg.usage.input_tokens
                 out_tok = msg.usage.output_tokens
