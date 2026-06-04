@@ -22,12 +22,9 @@ class OpenAIProvider(VLMProvider):
         "gpt-4.1-mini": {"in": 0.4,  "out": 1.6},
         "gpt-4.1-nano": {"in": 0.1,  "out": 0.4},
         "o4-mini":      {"in": 1.1,  "out": 4.4},
-    },
-        "gpt-4o-mini":  {"in": 0.15, "out": 0.6},
-        "gpt-4.1":      {"in": 2.0,  "out": 8.0},
-        "gpt-4.1-mini": {"in": 0.4,  "out": 1.6},
-        "gpt-4.1-nano": {"in": 0.1,  "out": 0.4},
     }
+
+    _NEW_PARAM_MODELS = ("gpt-5", "o4")
 
     def __init__(self, model: str = "gpt-5.5", api_key: str | None = None):
         self.model = model
@@ -41,14 +38,20 @@ class OpenAIProvider(VLMProvider):
         ext = image_path.lower().rsplit(".", 1)[-1]
         mime = {"png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg"}.get(ext, "image/png")
         data_url = f"data:{mime};base64,{_img_to_b64(image_path)}"
-        resp = client.chat.completions.create(
+
+        kwargs = dict(
             model=self.model,
-            max_tokens=max_tokens,
             messages=[{"role": "user", "content": [
                 {"type": "text", "text": prompt},
                 {"type": "image_url", "image_url": {"url": data_url}},
             ]}],
         )
+        if any(self.model.startswith(p) for p in self._NEW_PARAM_MODELS):
+            kwargs["max_completion_tokens"] = max_tokens
+        else:
+            kwargs["max_tokens"] = max_tokens
+
+        resp = client.chat.completions.create(**kwargs)
         text = resp.choices[0].message.content or ""
         usage = resp.usage
         in_tok, out_tok = usage.prompt_tokens, usage.completion_tokens

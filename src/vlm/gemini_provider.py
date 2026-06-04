@@ -15,9 +15,6 @@ class GeminiProvider(VLMProvider):
         "gemini-2.5-pro":         {"in": 1.25, "out": 10.0},
         "gemini-2.5-flash":       {"in": 0.075, "out": 0.30},
         "gemini-2.0-flash":       {"in": 0.075, "out": 0.30},
-    },
-        "gemini-2.5-flash": {"in": 0.075, "out": 0.30},
-        "gemini-2.0-flash": {"in": 0.075, "out": 0.30},
     }
 
     def __init__(self, model: str = "gemini-3.1-pro-preview", api_key: str | None = None):
