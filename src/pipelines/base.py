@@ -35,7 +35,9 @@ class Pipeline(abc.ABC):
         self.runs_root = Path(runs_root)
 
     def artifacts_dir(self, project: str) -> Path:
-        d = self.runs_root / self.name / project
+        model_slug = getattr(self.vlm, "model", None) or getattr(self.vlm, "deployment", None) or self.vlm.name
+        model_slug = str(model_slug).replace("/", "_").replace(":", "_")
+        d = self.runs_root / self.name / project / model_slug
         d.mkdir(parents=True, exist_ok=True)
         return d
 
