@@ -155,7 +155,7 @@ th{{background:#f5f5f5}}tr.winner{{background:#e8f5e9;font-weight:600}}
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--variants", default="A,B,C,D,E,F")
-    ap.add_argument("--models", default="openai:gpt-4o,openai:gpt-4o-mini,openai:gpt-4.1,azure:gpt-4.1-nano,gemini:gemini-2.5-pro,gemini:gemini-2.5-flash")
+    ap.add_argument("--models", default="gemini:gemini-3.1-pro-preview,anthropic:claude-opus-4-7,openai:gpt-5.5,azure:gpt-4o,azure:gpt-4.1-nano")
     ap.add_argument("--projects", default="4006,745,321,1729,3122")
     ap.add_argument("--out-csv", default="runs/leaderboard.csv")
     ap.add_argument("--out-html", default="runs/leaderboard.html")

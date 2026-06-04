@@ -9,12 +9,13 @@ class AnthropicProvider(VLMProvider):
     name = "anthropic"
 
     PRICE = {  # USD per 1M tokens (approximate, update from console)
+        "claude-opus-4-7":  {"in": 15.0, "out": 75.0},
         "claude-opus-4-6":  {"in": 15.0, "out": 75.0},
         "claude-sonnet-4-6":{"in": 3.0,  "out": 15.0},
         "claude-haiku-4-5-20251001": {"in": 0.8, "out": 4.0},
     }
 
-    def __init__(self, model: str = "claude-sonnet-4-6", api_key: str | None = None):
+    def __init__(self, model: str = "claude-opus-4-7", api_key: str | None = None):
         self.model = model
         self.api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
         if not self.api_key:

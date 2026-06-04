@@ -9,14 +9,27 @@ class OpenAIProvider(VLMProvider):
     name = "openai"
 
     PRICE = {
+        "gpt-5.5":      {"in": 8.0,  "out": 32.0},
+        "gpt-5.5-pro":  {"in": 30.0, "out": 120.0},
+        "gpt-5.1":      {"in": 5.0,  "out": 20.0},
+        "gpt-5":        {"in": 5.0,  "out": 20.0},
+        "gpt-5-pro":    {"in": 25.0, "out": 100.0},
+        "gpt-5-mini":   {"in": 0.5,  "out": 2.0},
+        "gpt-5-nano":   {"in": 0.1,  "out": 0.4},
         "gpt-4o":       {"in": 2.5,  "out": 10.0},
+        "gpt-4o-mini":  {"in": 0.15, "out": 0.6},
+        "gpt-4.1":      {"in": 2.0,  "out": 8.0},
+        "gpt-4.1-mini": {"in": 0.4,  "out": 1.6},
+        "gpt-4.1-nano": {"in": 0.1,  "out": 0.4},
+        "o4-mini":      {"in": 1.1,  "out": 4.4},
+    },
         "gpt-4o-mini":  {"in": 0.15, "out": 0.6},
         "gpt-4.1":      {"in": 2.0,  "out": 8.0},
         "gpt-4.1-mini": {"in": 0.4,  "out": 1.6},
         "gpt-4.1-nano": {"in": 0.1,  "out": 0.4},
     }
 
-    def __init__(self, model: str = "gpt-4o", api_key: str | None = None):
+    def __init__(self, model: str = "gpt-5.5", api_key: str | None = None):
         self.model = model
         self.api_key = api_key or os.environ.get("OPENAI_API_KEY")
         if not self.api_key:

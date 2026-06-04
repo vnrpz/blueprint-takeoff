@@ -9,12 +9,18 @@ class GeminiProvider(VLMProvider):
     name = "gemini"
 
     PRICE = {
-        "gemini-2.5-pro":   {"in": 1.25, "out": 10.0},
+        "gemini-3.1-pro-preview": {"in": 1.50, "out": 12.0},
+        "gemini-3-pro-preview":   {"in": 1.50, "out": 12.0},
+        "gemini-pro-latest":      {"in": 1.50, "out": 12.0},
+        "gemini-2.5-pro":         {"in": 1.25, "out": 10.0},
+        "gemini-2.5-flash":       {"in": 0.075, "out": 0.30},
+        "gemini-2.0-flash":       {"in": 0.075, "out": 0.30},
+    },
         "gemini-2.5-flash": {"in": 0.075, "out": 0.30},
         "gemini-2.0-flash": {"in": 0.075, "out": 0.30},
     }
 
-    def __init__(self, model: str = "gemini-2.5-flash", api_key: str | None = None):
+    def __init__(self, model: str = "gemini-3.1-pro-preview", api_key: str | None = None):
         self.model = model
         self.api_key = api_key or os.environ.get("GEMINI_API_KEY")
         if not self.api_key:
