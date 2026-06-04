@@ -96,7 +96,8 @@ def spec_group_key(u: Unit, *, bucket: float = 0.5) -> SpecGroupKey:
             ufactor_bucket(p.u_factor),
             p.egress,
         ))
-    panels.sort()
+    # Sort with a None-tolerant key (raw tuple has None vs bool which fails on py3.10+)
+    panels.sort(key=lambda t: tuple("" if x is None else str(x) for x in t))
     return SpecGroupKey(kind=u.kind, panels=tuple(panels))
 
 
