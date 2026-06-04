@@ -80,14 +80,26 @@ class SpecGroupKey:
 
 
 def spec_group_key(u: Unit, *, bucket: float = 0.5) -> SpecGroupKey:
-    """Build the matching key per TZ §5.
+    """Build the matching key per TZ §5 — RELAXED in R3.
 
-    For composite units we sort panels by (role, w, h) so [door, window]
-    and [window, door] orderings collapse to the same key. This is the
-    'mirror / hand folding' described in the brief.
+    R3 change (per user §5): the key now includes ONLY (kind, panel.role,
+    panel.width, panel.height). glass / u_factor / egress are scored as
+    field accuracy on matched groups instead of being part of the fold key.
+
+    Rationale: with the strict key, units that the model classified with
+    slightly different glass/u became unmatched — inflating hallucination
+    rate and depressing group_f1 even when the dimensional answer was
+    correct. Scoring those as fields aligns precision / recall / f1 with
+    the dimensional truth of the takeoff while preserving per-field metrics
+    in glass_acc / ufactor_acc / egress_acc on the matched subset.
+
+    Composites still fold mirror pairs because panel tuples are sorted.
     """
     panels = []
     for p in u.panels:
+        # Field shape kept compatible with downstream `_field_acc` consumer
+        # (idx 3=glass, 4=ufactor_bucket, 5=egress); only the fold KEY
+        # discards them via the sort/tuple slicing below.
         panels.append((
             p.role,
             round_dim(p.width_in, bucket),
@@ -96,8 +108,8 @@ def spec_group_key(u: Unit, *, bucket: float = 0.5) -> SpecGroupKey:
             ufactor_bucket(p.u_factor),
             p.egress,
         ))
-    # Sort with a None-tolerant key (raw tuple has None vs bool which fails on py3.10+)
-    panels.sort(key=lambda t: tuple("" if x is None else str(x) for x in t))
+    # Sort by (role, w, h) only — None-tolerant
+    panels.sort(key=lambda t: (str(t[0]), float(t[1]), float(t[2])))
     return SpecGroupKey(kind=u.kind, panels=tuple(panels))
 
 

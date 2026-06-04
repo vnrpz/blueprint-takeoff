@@ -34,12 +34,20 @@ def test_match_outside_tau_is_fp_and_fn():
     assert any(m.is_miss for m in matches)
 
 
-def test_match_glass_disagreement_blocks():
+def test_match_glass_disagreement_allows_match_but_lowers_field_acc():
+    """R3 RELAXATION: glass disagreement does NOT block matching anymore.
+    The match happens on (kind, w, h) and glass_acc captures the disagreement
+    on the matched subset. Test pins the new contract."""
+    from eval.metrics import evaluate
     pred = [_w("p1", 72.5, 88.5, qty=63, u=0.24, egress=True, glass="annealed")]
     gt   = [_w("W1", 72.5, 88.5, qty=63, u=0.24, egress=True, glass="mixed")]
     matches = match_units(pred, gt)
-    # Conflicting glass → no match.
-    assert all(not m.is_matched for m in matches)
+    # Should now match
+    assert sum(1 for m in matches if m.is_matched) == 1
+    # And glass_acc should reflect the disagreement
+    m = evaluate(pred, gt)
+    assert m.glass_acc == 0.0   # 0/1 panels glass matched
+    assert m.group_f1 == 1.0    # but dimensional matching is perfect
 
 
 def test_mirror_dedup_in_aggregation():

@@ -34,6 +34,7 @@ PROJECTS = {
 
 GROUND_TRUTH = {
     "4006": "tests/ground_truth/4006.json",
+    "OFR":  "tests/ground_truth/4006.json",  # OFR is the offer that produced 4006 GT — plumbing smoke only
     "745":  "tests/ground_truth/745.json",
 }
 

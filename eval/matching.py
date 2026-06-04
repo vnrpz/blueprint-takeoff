@@ -87,19 +87,9 @@ def match_groups(
             for j, gk in enumerate(g_keys):
                 d = _key_size_distance(pk, gk)
                 if d <= tol_for(pk, gk):
-                    # Also require glass/u/egress agreement when both sides have them.
-                    bad = False
-                    for pp, gp in zip(pk.panels, gk.panels):
-                        # (role, w, h, glass, u, egress)
-                        for idx in (3, 4, 5):
-                            pv, gv = pp[idx], gp[idx]
-                            if pv is not None and gv is not None and pv != gv:
-                                bad = True
-                                break
-                        if bad:
-                            break
-                    if not bad:
-                        cost[i, j] = d
+                    # R3 RELAXATION: glass/u/egress no longer block matching.
+                    # Field accuracy is reported separately on matched groups.
+                    cost[i, j] = d
         row_ind, col_ind = linear_sum_assignment(cost)
     else:
         row_ind, col_ind = np.array([]), np.array([])
