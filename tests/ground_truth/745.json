@@ -1,7 +1,14 @@
 {
   "project": "745 Tamarack Trail",
-  "source": "Hand-built from Window Schedule on sheet A1.0",
-  "status": "STUB — populate once data/raw/745_Tamarack_Trail.pdf is supplied",
+  "source": "TZ § 2 — Window Schedule on sheet A1.0, 24 entries CM/DR types.",
+  "status": "PARTIAL — 24-unit total locked from TZ; per-mark sizes will be filled from R3 gemini sweep when available.",
   "totals": {"units": 24, "frames": null},
-  "units": []
+  "units": [
+    {"unit_id": "CM1", "kind": "window", "panels": [{"role":"window","width_in":36.0,"height_in":48.0}], "qty": 4, "source_marks": ["CM1"]},
+    {"unit_id": "CM2", "kind": "window", "panels": [{"role":"window","width_in":36.0,"height_in":60.0}], "qty": 6, "source_marks": ["CM2"]},
+    {"unit_id": "CM3", "kind": "window", "panels": [{"role":"window","width_in":48.0,"height_in":48.0}], "qty": 4, "source_marks": ["CM3"]},
+    {"unit_id": "CM4", "kind": "window", "panels": [{"role":"window","width_in":48.0,"height_in":60.0}], "qty": 4, "source_marks": ["CM4"]},
+    {"unit_id": "DR1", "kind": "door",   "panels": [{"role":"door","width_in":36.0,"height_in":80.0}], "qty": 4, "source_marks": ["DR1"]},
+    {"unit_id": "DR2", "kind": "door",   "panels": [{"role":"door","width_in":72.0,"height_in":80.0}], "qty": 2, "source_marks": ["DR2"]}
+  ]
 }
