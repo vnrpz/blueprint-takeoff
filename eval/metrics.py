@@ -17,12 +17,12 @@ class Metrics:
     group_precision: float
     group_recall: float
     group_f1: float
-    qty_mae: float
+    qty_mae: Optional[float]
     unit_count_error: float
     frame_count_error: Optional[float]
-    glass_acc: float
-    ufactor_acc: float
-    egress_acc: float
+    glass_acc: Optional[float]
+    ufactor_acc: Optional[float]
+    egress_acc: Optional[float]
     hallucination_rate: float
     miss_rate: float
     matched_groups: int
@@ -39,7 +39,7 @@ def _frame_total(units: Iterable[Unit]) -> int:
     return sum(u.qty * max(1, len(u.panels)) for u in units)
 
 
-def _field_acc(matches: List[GroupMatch], idx: int) -> float:
+def _field_acc(matches: List[GroupMatch], idx: int) -> Optional[float]:
     """Compare one panel field across matched groups. idx maps into tuple
     (role, w, h, glass, u, egress)."""
     total = 0
@@ -54,7 +54,9 @@ def _field_acc(matches: List[GroupMatch], idx: int) -> float:
             total += 1
             if pv == gv:
                 hits += 1
-    return (hits / total) if total else 1.0
+    if total == 0:
+        return None
+    return hits / total
 
 
 def evaluate(
@@ -72,7 +74,7 @@ def evaluate(
     recall    = (len(matched) / gt_groups_total) if gt_groups_total else 0.0
     f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) else 0.0
 
-    qty_mae = (sum(abs(m.pred_qty - m.gt_qty) for m in matched) / len(matched)) if matched else 0.0
+    qty_mae = (sum(abs(m.pred_qty - m.gt_qty) for m in matched) / len(matched)) if matched else None
 
     pred_total = sum(m.pred_qty for m in matched) + sum(m.pred_qty for m in fps)
     gt_total   = sum(m.gt_qty   for m in matched) + sum(m.gt_qty   for m in fns)

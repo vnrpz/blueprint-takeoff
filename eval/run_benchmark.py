@@ -32,11 +32,21 @@ PROJECTS = {
     "3122":  "data/raw/3122_Lyndale.pdf",
 }
 
-GROUND_TRUTH = {
+# Two GT levels per R4:
+#  - extraction = drawing-faithful marks/RO (what the extractor should produce)
+#  - offer      = downstream offer form (frame size, folded groups, IRC flags)
+GROUND_TRUTH_EXTRACTION = {
+    "4006": "tests/ground_truth/4006_extract.json",
+    "OFR":  "tests/ground_truth/4006_extract.json",  # OFR is plumbing-smoke
+    "745":  "tests/ground_truth/745_extract.json",
+}
+GROUND_TRUTH_OFFER = {
     "4006": "tests/ground_truth/4006.json",
-    "OFR":  "tests/ground_truth/4006.json",  # OFR is the offer that produced 4006 GT — plumbing smoke only
+    "OFR":  "tests/ground_truth/4006.json",
     "745":  "tests/ground_truth/745.json",
 }
+# Legacy name kept for compatibility
+GROUND_TRUTH = GROUND_TRUTH_EXTRACTION
 
 
 def _load_gt_units(path: str) -> List[Unit]:

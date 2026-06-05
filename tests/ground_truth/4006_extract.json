@@ -1,0 +1,15 @@
+{
+  "project": "4006 N Sheridan",
+  "level": "extract",
+  "source": "Blueprint elevations + sections (provisional — schedule sheet not yet located in 144p set).",
+  "provisional": true,
+  "verification_status": "pending human verification — extracted units below approximate what the R3 gemini sweep observed on elevations (W1, W2, U1, D1 marks); per-mark drawing dimensions and qty need confirmation against actual sheets.",
+  "totals": {"units": null},
+  "notes": "When the Window/Door Schedule sheet is identified (likely S-xxx or A-xxx), replace this file with the transcribed schedule rows. Until then, scoring against this file is provisional.",
+  "units": [
+    {"unit_id": "W1", "kind": "window", "panels": [{"role":"window","width_in":36.0,"height_in":60.0,"glass":"tempered"}], "qty": 10, "source_marks":["W1"]},
+    {"unit_id": "W2", "kind": "window", "panels": [{"role":"window","width_in":48.0,"height_in":72.0,"glass":"annealed"}], "qty": 12, "source_marks":["W2"]},
+    {"unit_id": "D1", "kind": "door",   "panels": [{"role":"door","width_in":36.0,"height_in":84.0}], "qty": 4, "source_marks":["D1"]},
+    {"unit_id": "U1", "kind": "composite", "panels": [{"role":"window","width_in":36.1875,"height_in":96.0},{"role":"door","width_in":36.1875,"height_in":96.0}], "qty": 5, "source_marks":["U1"]}
+  ]
+}
