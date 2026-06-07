@@ -6,7 +6,7 @@ Per TZ §19 R4 #4:
   tempered/egress flags per IRC).
 
 Mappings:
-* RO → frame: subtract typical shim allowance (default 0.75 in each side
+* RO → frame: subtract typical shim allowance (default 0.375 in each side (0.75 total per dim)
   for vinyl/aluminum). Per-unit override via panel.rough_opening.
 * Mirror pairs fold via existing spec_group_key (kind, role, w, h).
 * IRC R308.4: glass tempered when adjacent to door or sill < 18 in.
@@ -21,7 +21,7 @@ from src.schema import Unit, Panel, RoughOpening
 
 
 # Shim allowance per side (inches). Tweak per manufacturer / TZ later.
-DEFAULT_SHIM_PER_SIDE_IN = 0.75
+DEFAULT_SHIM_PER_SIDE_IN = 0.375
 
 
 def ro_to_frame(ro_w: float, ro_h: float, *,

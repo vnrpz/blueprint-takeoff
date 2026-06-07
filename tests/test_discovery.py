@@ -4,8 +4,8 @@ from src.schema import Unit, Panel, RoughOpening
 
 
 def test_ro_to_frame_default_shim():
-    # 0.75 per side → subtract 1.5 from each dim
-    assert ro_to_frame(73.25, 89.25) == (71.75, 87.75)
+    # 0.375 per side → subtract 0.75 from each dim (R5 fix)
+    assert ro_to_frame(73.25, 89.25) == (72.5, 88.5)
 
 
 def test_ro_to_frame_custom_shim():
@@ -17,8 +17,8 @@ def test_transform_unit_applies_ro():
              panels=[Panel(role="window", width_in=0.0, height_in=0.0)],
              rough_opening=RoughOpening(w_in=36.75, h_in=60.75))
     t = transform_unit(u)
-    assert t.panels[0].width_in == 35.25  # 36.75 - 1.5
-    assert t.panels[0].height_in == 59.25
+    assert t.panels[0].width_in == 36.0   # 36.75 - 0.75
+    assert t.panels[0].height_in == 60.0
     # Original unit unchanged
     assert u.panels[0].width_in == 0.0
 
@@ -41,5 +41,5 @@ def test_transform_all_batch():
     ]
     out = transform_all(units)
     for t in out:
-        assert t.panels[0].width_in == 35.25
-        assert t.panels[0].height_in == 47.25
+        assert t.panels[0].width_in == 36.0
+        assert t.panels[0].height_in == 48.0
