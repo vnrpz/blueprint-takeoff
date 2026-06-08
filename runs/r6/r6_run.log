@@ -1,0 +1,34 @@
+[2026-06-08 16:05:55] === R6 BENCHMARK START: 6 cells ===
+[2026-06-08 16:05:55] === variant=E model=gemini:gemini-3.1-pro-preview project=745 ===
+[2026-06-08 16:11:35]   units=37 qty=58 groups=8 cost=$0.3094 elapsed=339.29s errors=0
+[2026-06-08 16:11:35]   extraction: group_f1=0.0 qty_mae=None unit_count_error=1.4166666666666667
+[2026-06-08 16:11:35]   offer:      group_f1=0.08 qty_mae=0.0 unit_count_error=1.4166666666666667
+[2026-06-08 16:11:35]   wrote /root/blueprint-takeoff/runs/leaderboard_r6_E_gemini_gemini-3.1-pro-preview.csv
+[2026-06-08 16:11:35] === variant=E model=anthropic:claude-opus-4-8 project=745 ===
+[2026-06-08 16:15:51]   units=43 qty=68 groups=14 cost=$1.9021 elapsed=255.89s errors=0
+[2026-06-08 16:15:51]   extraction: group_f1=0.05555555555555556 qty_mae=0.0 unit_count_error=1.8333333333333333
+[2026-06-08 16:15:51]   offer:      group_f1=0.0 qty_mae=None unit_count_error=1.8333333333333333
+[2026-06-08 16:15:51]   wrote /root/blueprint-takeoff/runs/leaderboard_r6_E_anthropic_claude-opus-4-8.csv
+[2026-06-08 16:15:51] === variant=A model=gemini:gemini-3.1-pro-preview project=745 ===
+[2026-06-08 16:19:20]   units=32 qty=54 groups=6 cost=$0.202 elapsed=170.12s errors=0
+[2026-06-08 16:19:20]   extraction: group_f1=0.09090909090909091 qty_mae=5.0 unit_count_error=1.25
+[2026-06-08 16:19:20]   offer:      group_f1=0.1 qty_mae=2.0 unit_count_error=1.25
+[2026-06-08 16:19:20]   wrote /root/blueprint-takeoff/runs/leaderboard_r6_A_gemini_gemini-3.1-pro-preview.csv
+[2026-06-08 16:19:20] === variant=A model=anthropic:claude-opus-4-8 project=745 ===
+[2026-06-08 16:22:34]   units=19 qty=41 groups=5 cost=$2.0291 elapsed=154.82s errors=0
+[2026-06-08 16:22:35]   extraction: group_f1=0.0 qty_mae=None unit_count_error=0.7083333333333334
+[2026-06-08 16:22:35]   offer:      group_f1=0.0 qty_mae=None unit_count_error=0.7083333333333334
+[2026-06-08 16:22:35]   wrote /root/blueprint-takeoff/runs/leaderboard_r6_A_anthropic_claude-opus-4-8.csv
+[2026-06-08 16:22:35] === variant=C model=gemini:gemini-3.1-pro-preview project=745 ===
+[2026-06-08 16:23:14]   units=0 qty=0 groups=0 cost=$0.0 elapsed=0.0s errors=2
+[2026-06-08 16:23:14]   first errors: ['raster pages skipped (R6 cost gate): 15/15 pages [1,2,3,4,5,6,7,8,9,10...]', 'all_pages_raster: Variant C not applicable; see docs/r6_variant_c_cost_gate.md']
+[2026-06-08 16:23:14]   extraction: group_f1=0.0 qty_mae=None unit_count_error=1.0
+[2026-06-08 16:23:14]   offer:      group_f1=0.0 qty_mae=None unit_count_error=1.0
+[2026-06-08 16:23:14]   wrote /root/blueprint-takeoff/runs/leaderboard_r6_C_gemini_gemini-3.1-pro-preview.csv
+[2026-06-08 16:23:14] === variant=C model=anthropic:claude-opus-4-8 project=745 ===
+[2026-06-08 16:23:53]   units=0 qty=0 groups=0 cost=$0.0 elapsed=0.0s errors=2
+[2026-06-08 16:23:53]   first errors: ['raster pages skipped (R6 cost gate): 15/15 pages [1,2,3,4,5,6,7,8,9,10...]', 'all_pages_raster: Variant C not applicable; see docs/r6_variant_c_cost_gate.md']
+[2026-06-08 16:23:53]   extraction: group_f1=0.0 qty_mae=None unit_count_error=1.0
+[2026-06-08 16:23:53]   offer:      group_f1=0.0 qty_mae=None unit_count_error=1.0
+[2026-06-08 16:23:53]   wrote /root/blueprint-takeoff/runs/leaderboard_r6_C_anthropic_claude-opus-4-8.csv
+[2026-06-08 16:23:53] === R6 BENCHMARK DONE — wrote /root/blueprint-takeoff/runs/r6_leaderboard.csv (12 rows) ===

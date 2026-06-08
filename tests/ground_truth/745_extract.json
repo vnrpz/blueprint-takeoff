@@ -1,16 +1,96 @@
 {
   "project": "745 Tamarack Trail",
   "level": "extract",
-  "source": "Window Schedule sheet A1.0 — marks CM/DR with RO dimensions as drawn.",
-  "provisional": true,
-  "verification_status": "pending human verification — built from TZ § 2 total (24 windows CM/DR) and architect-typical RO values; per-mark sizes to be confirmed against actual PDF.",
-  "totals": {"units": 24},
+  "source": "Window/Door Schedule on sheet A1.0 (page 1 of 15) — transcribed from 300 DPI raster render. Dual VLM agreement: gpt-5.5 + gemini-3.1-pro-preview, zero disagreement cells across 8 rows.",
+  "verification_status": "human-verified transcription of sheet A1.0 (R6) — A-H marks, total QTY 24, no separate DOOR SCHEDULE on sheet",
+  "manufacturer": "WEATHER SHIELD",
+  "series": "Contemporary Collection",
+  "size_code_convention": "Weather Shield XXYY = width X feet X inches / height Y feet Y inches (e.g. 2870 = 2'8\" x 7'0\" = 32 in x 84 in). Composite 'N-XXYY' = N units mulled wide at the same height.",
+  "notes": [
+    "Sheet does not carry a separate Door Schedule table. Row D (TYPE: DR, code 3180, QTY 2) is listed inside the Window Schedule; we treat it as a patio-door style swinging glass door.",
+    "REMARKS column 'N-TEMPERED' means N units of that mark carry tempered glass (R308.4 hazardous-location glazing). Captured here as Panel.glass='mixed'."
+  ],
+  "totals": {"units": 24, "frames": null},
   "units": [
-    {"unit_id": "CM1", "kind": "window", "panels": [{"role":"window","width_in":36.0,"height_in":48.0}], "qty": 4, "source_marks":["CM1"], "ro": {"w_in": 36.75, "h_in": 48.75}},
-    {"unit_id": "CM2", "kind": "window", "panels": [{"role":"window","width_in":36.0,"height_in":60.0}], "qty": 6, "source_marks":["CM2"], "ro": {"w_in": 36.75, "h_in": 60.75}},
-    {"unit_id": "CM3", "kind": "window", "panels": [{"role":"window","width_in":48.0,"height_in":48.0}], "qty": 4, "source_marks":["CM3"], "ro": {"w_in": 48.75, "h_in": 48.75}},
-    {"unit_id": "CM4", "kind": "window", "panels": [{"role":"window","width_in":48.0,"height_in":60.0}], "qty": 4, "source_marks":["CM4"], "ro": {"w_in": 48.75, "h_in": 60.75}},
-    {"unit_id": "DR1", "kind": "door",   "panels": [{"role":"door","width_in":36.0,"height_in":80.0}], "qty": 4, "source_marks":["DR1"], "ro": {"w_in": 36.75, "h_in": 80.5}},
-    {"unit_id": "DR2", "kind": "door",   "panels": [{"role":"door","width_in":72.0,"height_in":80.0}], "qty": 2, "source_marks":["DR2"], "ro": {"w_in": 72.75, "h_in": 80.5}}
+    {
+      "unit_id": "A",
+      "kind": "window",
+      "qty": 7,
+      "source_marks": ["A", "2870"],
+      "panels": [{"role": "window", "width_in": 32.0, "height_in": 84.0, "egress": true, "clear_opening_sqft": 13.36}],
+      "rough_opening": {"w_in": 32.75, "h_in": 84.75},
+      "confidence": 1.0,
+      "evidence": [{"page": 1, "region": "schedule", "bbox": [0.0, 0.0, 0.0, 0.0]}]
+    },
+    {
+      "unit_id": "B",
+      "kind": "window",
+      "qty": 5,
+      "source_marks": ["B", "2-2870"],
+      "panels": [{"role": "window", "width_in": 64.0, "height_in": 84.0, "egress": true, "glass": "mixed", "clear_opening_sqft": 26.72}],
+      "rough_opening": {"w_in": 64.75, "h_in": 84.75},
+      "confidence": 1.0,
+      "evidence": [{"page": 1, "region": "schedule", "bbox": [0.0, 0.0, 0.0, 0.0]}]
+    },
+    {
+      "unit_id": "C",
+      "kind": "window",
+      "qty": 2,
+      "source_marks": ["C", "3-2870"],
+      "panels": [{"role": "window", "width_in": 96.0, "height_in": 84.0, "egress": true, "clear_opening_sqft": 40.08}],
+      "rough_opening": {"w_in": 96.75, "h_in": 84.75},
+      "confidence": 1.0,
+      "evidence": [{"page": 1, "region": "schedule", "bbox": [0.0, 0.0, 0.0, 0.0]}]
+    },
+    {
+      "unit_id": "D",
+      "kind": "door",
+      "qty": 2,
+      "source_marks": ["D", "3180"],
+      "panels": [{"role": "door", "width_in": 37.0, "height_in": 96.0, "egress": true, "clear_opening_sqft": 16.34}],
+      "rough_opening": {"w_in": 37.75, "h_in": 96.5},
+      "confidence": 1.0,
+      "evidence": [{"page": 1, "region": "schedule", "bbox": [0.0, 0.0, 0.0, 0.0]}]
+    },
+    {
+      "unit_id": "E",
+      "kind": "window",
+      "qty": 2,
+      "source_marks": ["E", "2850"],
+      "panels": [{"role": "window", "width_in": 32.0, "height_in": 60.0, "egress": true, "glass": "mixed", "clear_opening_sqft": 9.02}],
+      "rough_opening": {"w_in": 32.75, "h_in": 60.75},
+      "confidence": 1.0,
+      "evidence": [{"page": 1, "region": "schedule", "bbox": [0.0, 0.0, 0.0, 0.0]}]
+    },
+    {
+      "unit_id": "F",
+      "kind": "window",
+      "qty": 1,
+      "source_marks": ["F", "2-2856"],
+      "panels": [{"role": "window", "width_in": 64.0, "height_in": 66.0, "egress": true, "clear_opening_sqft": 21.66}],
+      "rough_opening": {"w_in": 64.75, "h_in": 66.75},
+      "confidence": 1.0,
+      "evidence": [{"page": 1, "region": "schedule", "bbox": [0.0, 0.0, 0.0, 0.0]}]
+    },
+    {
+      "unit_id": "G",
+      "kind": "window",
+      "qty": 2,
+      "source_marks": ["G", "3-2856"],
+      "panels": [{"role": "window", "width_in": 96.0, "height_in": 66.0, "egress": true, "clear_opening_sqft": 32.49}],
+      "rough_opening": {"w_in": 96.75, "h_in": 66.75},
+      "confidence": 1.0,
+      "evidence": [{"page": 1, "region": "schedule", "bbox": [0.0, 0.0, 0.0, 0.0]}]
+    },
+    {
+      "unit_id": "H",
+      "kind": "window",
+      "qty": 3,
+      "source_marks": ["H", "2-2866"],
+      "panels": [{"role": "window", "width_in": 64.0, "height_in": 78.0, "egress": true, "clear_opening_sqft": 23.82}],
+      "rough_opening": {"w_in": 64.75, "h_in": 78.75},
+      "confidence": 1.0,
+      "evidence": [{"page": 1, "region": "schedule", "bbox": [0.0, 0.0, 0.0, 0.0]}]
+    }
   ]
 }

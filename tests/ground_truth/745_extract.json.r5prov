@@ -1,0 +1,16 @@
+{
+  "project": "745 Tamarack Trail",
+  "level": "extract",
+  "source": "Window Schedule sheet A1.0 — marks CM/DR with RO dimensions as drawn.",
+  "provisional": true,
+  "verification_status": "pending human verification — built from TZ § 2 total (24 windows CM/DR) and architect-typical RO values; per-mark sizes to be confirmed against actual PDF.",
+  "totals": {"units": 24},
+  "units": [
+    {"unit_id": "CM1", "kind": "window", "panels": [{"role":"window","width_in":36.0,"height_in":48.0}], "qty": 4, "source_marks":["CM1"], "ro": {"w_in": 36.75, "h_in": 48.75}},
+    {"unit_id": "CM2", "kind": "window", "panels": [{"role":"window","width_in":36.0,"height_in":60.0}], "qty": 6, "source_marks":["CM2"], "ro": {"w_in": 36.75, "h_in": 60.75}},
+    {"unit_id": "CM3", "kind": "window", "panels": [{"role":"window","width_in":48.0,"height_in":48.0}], "qty": 4, "source_marks":["CM3"], "ro": {"w_in": 48.75, "h_in": 48.75}},
+    {"unit_id": "CM4", "kind": "window", "panels": [{"role":"window","width_in":48.0,"height_in":60.0}], "qty": 4, "source_marks":["CM4"], "ro": {"w_in": 48.75, "h_in": 60.75}},
+    {"unit_id": "DR1", "kind": "door",   "panels": [{"role":"door","width_in":36.0,"height_in":80.0}], "qty": 4, "source_marks":["DR1"], "ro": {"w_in": 36.75, "h_in": 80.5}},
+    {"unit_id": "DR2", "kind": "door",   "panels": [{"role":"door","width_in":72.0,"height_in":80.0}], "qty": 2, "source_marks":["DR2"], "ro": {"w_in": 72.75, "h_in": 80.5}}
+  ]
+}
