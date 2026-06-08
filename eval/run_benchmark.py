@@ -35,10 +35,14 @@ PROJECTS = {
 # Two GT levels per R4:
 #  - extraction = drawing-faithful marks/RO (what the extractor should produce)
 #  - offer      = downstream offer form (frame size, folded groups, IRC flags)
+# R5 decision (see R5_FINDINGS.md §3): 4006 has no window/door schedule sheet
+# in its 144-page set, so we cannot author a truly human-transcribed GT for it.
+# Drop from EXTRACTION leaderboard; keep on OFFER side (offer-only benchmark).
+# 745 has a rasterized schedule on sheet A1.0 — usable.
 GROUND_TRUTH_EXTRACTION = {
-    "4006": "tests/ground_truth/4006_extract.json",
-    "OFR":  "tests/ground_truth/4006_extract.json",  # OFR is plumbing-smoke
     "745":  "tests/ground_truth/745_extract.json",
+    # "OFR": kept for smoke/scoring against 4006 OFFER GT for plumbing only
+    "OFR":  "tests/ground_truth/4006_extract.json",
 }
 GROUND_TRUTH_OFFER = {
     "4006": "tests/ground_truth/4006.json",

@@ -91,8 +91,10 @@ class AnthropicProvider(VLMProvider):
                         ],
                     }],
                 )
-                # claude-opus-4-8 deprecated `temperature`; older opus still accepts it
-                if not self.model.startswith("claude-opus-4-8"):
+                # R5 fix: claude-opus-4-7 and claude-opus-4-8 both reject `temperature`
+                # (400 invalid_request_error "deprecated for this model"). Older sonnet/haiku
+                # still accept it. Apply only to non-opus-4-7/4-8 models.
+                if not (self.model.startswith("claude-opus-4-7") or self.model.startswith("claude-opus-4-8")):
                     kwargs["temperature"] = 0
                 msg = client.messages.create(**kwargs)
                 text = "".join(b.text for b in msg.content if getattr(b, "text", None))
