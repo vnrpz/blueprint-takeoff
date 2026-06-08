@@ -1,0 +1,13 @@
+cost_usd,egress_acc,elapsed_sec,errors_count,first_error,fn_groups,fp_groups,frame_count_error,glass_acc,group_f1,group_precision,group_recall,gt_level,gt_units_total,hallucination_rate,matched_groups,miss_rate,model,n_groups,n_units,pred_units_total,project,qty_mae,ufactor_acc,unit_count_error,variant
+0.3094,,339.29,0,,8,19,,,0.0,0.0,0.0,extraction,24,1.0,0,1.0,gemini:gemini-3.1-pro-preview,8,58,58,745,,,1.4166666666666667,E
+0.3094,,339.29,0,,5,18,,,0.08,0.05263157894736842,0.16666666666666666,offer,24,0.9473684210526315,1,0.8333333333333334,gemini:gemini-3.1-pro-preview,8,58,58,745,0.0,,1.4166666666666667,E
+1.9021,0.0,255.89,0,,7,27,,,0.05555555555555556,0.03571428571428571,0.125,extraction,24,0.9642857142857143,1,0.875,anthropic:claude-opus-4-8,14,68,68,745,0.0,,1.8333333333333333,E
+1.9021,,255.89,0,,6,28,,,0.0,0.0,0.0,offer,24,1.0,0,1.0,anthropic:claude-opus-4-8,14,68,68,745,,,1.8333333333333333,E
+0.202,1.0,170.12,0,,7,13,,,0.09090909090909091,0.07142857142857142,0.125,extraction,24,0.9285714285714286,1,0.875,gemini:gemini-3.1-pro-preview,6,54,54,745,5.0,,1.25,A
+0.202,,170.12,0,,5,13,,,0.1,0.07142857142857142,0.16666666666666666,offer,24,0.9285714285714286,1,0.8333333333333334,gemini:gemini-3.1-pro-preview,6,54,54,745,2.0,,1.25,A
+2.0291,,154.82,0,,8,14,,,0.0,0.0,0.0,extraction,24,1.0,0,1.0,anthropic:claude-opus-4-8,5,41,41,745,,,0.7083333333333334,A
+2.0291,,154.82,0,,6,14,,,0.0,0.0,0.0,offer,24,1.0,0,1.0,anthropic:claude-opus-4-8,5,41,41,745,,,0.7083333333333334,A
+0.0,,0.0,2,"raster pages skipped (R6 cost gate): 15/15 pages [1,2,3,4,5,6,7,8,9,10...]",8,0,,,0.0,0.0,0.0,extraction,24,0.0,0,1.0,gemini:gemini-3.1-pro-preview,0,0,0,745,,,1.0,C
+0.0,,0.0,2,"raster pages skipped (R6 cost gate): 15/15 pages [1,2,3,4,5,6,7,8,9,10...]",6,0,,,0.0,0.0,0.0,offer,24,0.0,0,1.0,gemini:gemini-3.1-pro-preview,0,0,0,745,,,1.0,C
+0.0,,0.0,2,"raster pages skipped (R6 cost gate): 15/15 pages [1,2,3,4,5,6,7,8,9,10...]",8,0,,,0.0,0.0,0.0,extraction,24,0.0,0,1.0,anthropic:claude-opus-4-8,0,0,0,745,,,1.0,C
+0.0,,0.0,2,"raster pages skipped (R6 cost gate): 15/15 pages [1,2,3,4,5,6,7,8,9,10...]",6,0,,,0.0,0.0,0.0,offer,24,0.0,0,1.0,anthropic:claude-opus-4-8,0,0,0,745,,,1.0,C
