@@ -1,4 +1,6 @@
-"""Discovery layer (R4): transform extracted units → offer form.
+"""Discovery layer (R6): transform extracted units → offer form.
+
+R6 update: per-view shim constants (windows vs doors).
 
 Per TZ §19 R4 #4:
 * Input: extracted units with drawing-faithful marks, RO/nominal sizes, qty.
@@ -6,40 +8,69 @@ Per TZ §19 R4 #4:
   tempered/egress flags per IRC).
 
 Mappings:
-* RO → frame: subtract typical shim allowance (default 0.375 in each side (0.75 total per dim)
-  for vinyl/aluminum). Per-unit override via panel.rough_opening.
+* RO → frame: subtract per-view shim. Windows use 0.75 total on each dim;
+  doors use 0.75 total on width but only 0.5 on height (threshold has no
+  allowance under the unit). Per-unit override via panel.rough_opening +
+  shim_per_side_in argument (kept for backward compatibility).
 * Mirror pairs fold via existing spec_group_key (kind, role, w, h).
 * IRC R308.4: glass tempered when adjacent to door or sill < 18 in.
-* IRC R310: egress required for bedrooms; clear opening ≥ 5.7 sqft.
+* IRC R310: egress required for bedrooms; clear opening >= 5.7 sqft.
 """
 from __future__ import annotations
 
-from copy import deepcopy
-from typing import Iterable, List, Tuple
+from typing import Iterable, List, Optional, Tuple
 
 from src.schema import Unit, Panel, RoughOpening
 
 
-# Shim allowance per side (inches). Tweak per manufacturer / TZ later.
+# Legacy symmetric shim (per side). Still exported so older call sites that
+# pass `shim_per_side_in=` directly keep working.
 DEFAULT_SHIM_PER_SIDE_IN = 0.375
 
 
+# R6 per-view shim, expressed as TOTAL reduction on each dim (both sides
+# combined). Lookup keyed by Unit.kind.
+#  windows: 0.75 w / 0.75 h  -> 0.375 per side, both dims
+#  doors:   0.75 w / 0.5 h   -> 0.375 per side on width; 0.25 per side on
+#                              height (effectively all allowance on the
+#                              head -- threshold sits on subfloor with no
+#                              shim).
+PER_VIEW_TOTAL_SHIM_IN = {
+    "window": {"w": 0.75, "h": 0.75},
+    "door":   {"w": 0.75, "h": 0.5},
+}
+
+
 def ro_to_frame(ro_w: float, ro_h: float, *,
-                shim_per_side_in: float = DEFAULT_SHIM_PER_SIDE_IN
+                kind: str = "window",
+                shim_per_side_in: Optional[float] = None,
                 ) -> Tuple[float, float]:
-    """RO → frame: subtract 2x shim from each dimension."""
-    return (ro_w - 2 * shim_per_side_in, ro_h - 2 * shim_per_side_in)
+    """RO -> frame.
+
+    Args:
+      ro_w, ro_h: rough opening width / height (inches).
+      kind: "window" or "door" -- selects the per-view total shim. Ignored
+            when `shim_per_side_in` is given.
+      shim_per_side_in: legacy override. When provided, applies symmetric
+            2*x reduction on both dims (R4/R5 behaviour).
+    """
+    if shim_per_side_in is not None:
+        return (ro_w - 2 * shim_per_side_in, ro_h - 2 * shim_per_side_in)
+    s = PER_VIEW_TOTAL_SHIM_IN.get(kind, PER_VIEW_TOTAL_SHIM_IN["window"])
+    return (ro_w - s["w"], ro_h - s["h"])
 
 
-def transform_unit(u: Unit, *, shim_per_side_in: float = DEFAULT_SHIM_PER_SIDE_IN
+def transform_unit(u: Unit, *,
+                   shim_per_side_in: Optional[float] = None,
                    ) -> Unit:
     """Return a new Unit with frame-size panels derived from RO (if present).
 
+    Per-view shim is selected from `u.kind` ("window"/"door"). Pass
+    `shim_per_side_in=` to force legacy symmetric behaviour.
+
     If a unit has no rough_opening attached, leave its panel sizes unchanged
-    — the assumption is the extractor already reported frame size."""
-    new_panels = []
-    for p in u.panels:
-        new_panels.append(p)
+    -- the assumption is the extractor already reported frame size."""
+    new_panels = list(u.panels)
     out = Unit(
         unit_id=u.unit_id, kind=u.kind, panels=new_panels, qty=u.qty,
         source_marks=list(u.source_marks),
@@ -51,11 +82,10 @@ def transform_unit(u: Unit, *, shim_per_side_in: float = DEFAULT_SHIM_PER_SIDE_I
         discovery_gaps=list(u.discovery_gaps),
     )
     if u.rough_opening is not None and u.panels:
-        # Apply RO→frame to the FIRST panel (the unit's primary opening).
-        # Composite units carry per-panel RO not captured at unit level — we
-        # only adjust if a single per-unit RO is present.
-        fw, fh = ro_to_frame(u.rough_opening.w_in, u.rough_opening.h_in,
-                             shim_per_side_in=shim_per_side_in)
+        fw, fh = ro_to_frame(
+            u.rough_opening.w_in, u.rough_opening.h_in,
+            kind=u.kind, shim_per_side_in=shim_per_side_in,
+        )
         p0 = new_panels[0]
         new_panels[0] = Panel(
             role=p0.role, width_in=fw, height_in=fh,
@@ -66,6 +96,6 @@ def transform_unit(u: Unit, *, shim_per_side_in: float = DEFAULT_SHIM_PER_SIDE_I
 
 
 def transform_all(units: Iterable[Unit], *,
-                  shim_per_side_in: float = DEFAULT_SHIM_PER_SIDE_IN
+                  shim_per_side_in: Optional[float] = None,
                   ) -> List[Unit]:
     return [transform_unit(u, shim_per_side_in=shim_per_side_in) for u in units]

@@ -1,26 +1,18 @@
 """Leaderboard runner (TZ §14).
 
-R6 updates:
-  * Per-run CSV at runs/leaderboard_<variant>_<model_safe>.csv to avoid
-    last-writer-wins between parallel sweeps. A merger
-    (eval/merge_leaderboard.py) folds them into the canonical
-    runs/leaderboard.csv.
-  * Optional --canonical flag forces the single-file write (legacy).
-  * --measure-project + --gt-level generalize the winner pick; default
-    measure-project = "745" extraction (4006 is offer-only now).
-  * Each row carries a `gt_level` tag (extraction/offer/none) so the
-    canonical merger can keep them separate.
+Iterates variants × models × projects. Persists per-run JSON + a combined
+runs/leaderboard.csv and runs/leaderboard.html. Winner selection:
+max group_f1 with unit_count_error ≤ 0.05, tie-break qty_mae ↓, then cost ↑.
 """
 from __future__ import annotations
 
 import argparse
 import csv
 import json
-import os
-import re
 import sys
 import time
 import traceback
+from dataclasses import asdict
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -41,10 +33,15 @@ PROJECTS = {
 }
 
 # Two GT levels per R4:
-#  - extraction = drawing-faithful marks/RO
+#  - extraction = drawing-faithful marks/RO (what the extractor should produce)
 #  - offer      = downstream offer form (frame size, folded groups, IRC flags)
+# R5 decision (see R5_FINDINGS.md §3): 4006 has no window/door schedule sheet
+# in its 144-page set, so we cannot author a truly human-transcribed GT for it.
+# Drop from EXTRACTION leaderboard; keep on OFFER side (offer-only benchmark).
+# 745 has a rasterized schedule on sheet A1.0 — usable.
 GROUND_TRUTH_EXTRACTION = {
     "745":  "tests/ground_truth/745_extract.json",
+    # "OFR": kept for smoke/scoring against 4006 OFFER GT for plumbing only
     "OFR":  "tests/ground_truth/4006_extract.json",
 }
 GROUND_TRUTH_OFFER = {
@@ -52,19 +49,16 @@ GROUND_TRUTH_OFFER = {
     "OFR":  "tests/ground_truth/4006.json",
     "745":  "tests/ground_truth/745.json",
 }
-# Back-compat alias used by older callers
+# Legacy name kept for compatibility
 GROUND_TRUTH = GROUND_TRUTH_EXTRACTION
-
-
-def _gt_table(level: str) -> Dict[str, str]:
-    if level == "offer":
-        return GROUND_TRUTH_OFFER
-    return GROUND_TRUTH_EXTRACTION
 
 
 def _load_gt_units(path: str) -> List[Unit]:
     raw = json.loads(Path(path).read_text(encoding="utf-8"))
-    return [Unit.from_dict(u) for u in raw.get("units", [])]
+    out = []
+    for u in raw.get("units", []):
+        out.append(Unit.from_dict(u))
+    return out
 
 
 def _frames_total(gt_path: str) -> Optional[int]:
@@ -72,66 +66,19 @@ def _frames_total(gt_path: str) -> Optional[int]:
     return raw.get("totals", {}).get("frames")
 
 
-def _pick_winner(rows: List[Dict], measure_project: str = "745",
-                 gt_level: str = "extraction",
-                 unit_count_error_max: float = 0.05) -> Optional[Dict]:
-    """Pick the winning (variant, model) on the measurement project.
-
-    Filters by project AND gt_level (extraction/offer). No hardcoded 4006.
-    """
-    cands = [
-        r for r in rows
-        if r.get("project") == measure_project
-        and r.get("gt_level") == gt_level
-        and (r.get("unit_count_error") is not None)
-        and r.get("unit_count_error", 1.0) <= unit_count_error_max
-    ]
+def _pick_winner(rows: List[Dict]) -> Optional[Dict]:
+    cands = [r for r in rows if r.get("project") == "4006" and r.get("unit_count_error", 1.0) <= 0.05]
     if not cands:
         return None
-    cands.sort(key=lambda r: (-(r.get("group_f1") or 0),
-                              (r.get("qty_mae") or 1e9),
-                              (r.get("cost_usd") or 1e9)))
+    cands.sort(key=lambda r: (-r.get("group_f1", 0), r.get("qty_mae", 1e9), r.get("cost_usd", 1e9)))
     return cands[0]
 
 
-def _safe_id(s: str) -> str:
-    return re.sub(r"[^A-Za-z0-9_.+-]", "_", s)
-
-
-def _per_run_csv(out_dir: str, variant: str, model: str) -> str:
-    return os.path.join(out_dir, f"leaderboard_{_safe_id(variant)}_{_safe_id(model)}.csv")
-
-
-def _write_csv(rows: List[Dict], path: str) -> None:
-    Path(path).parent.mkdir(parents=True, exist_ok=True)
-    if not rows:
-        Path(path).write_text("", encoding="utf-8")
-        return
-    fields = sorted({k for r in rows for k in r.keys()})
-    with open(path, "w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=fields)
-        w.writeheader()
-        w.writerows(rows)
-
-
 def run(variants: List[str], models: List[str], projects: List[str],
-        out_csv: str = "runs/leaderboard.csv",
-        out_html: str = "runs/leaderboard.html",
-        budget_usd: float = 0.0,
-        canonical: bool = False,
-        gt_level: str = "extraction",
-        measure_project: str = "745",
-        ) -> List[Dict]:
-    """Run a (variants × models × projects) sweep.
-
-    By default (canonical=False) writes per-(variant×model) partials into
-    runs/, plus the legacy combined out_csv. With canonical=True only the
-    single combined CSV is written.
-    """
+        out_csv: str = "runs/leaderboard.csv", out_html: str = "runs/leaderboard.html",
+        budget_usd: float = 0.0) -> List[Dict]:
     rows: List[Dict] = []
     spent = 0.0
-    out_dir = os.path.dirname(out_csv) or "runs"
-    gt_map = _gt_table(gt_level)
     for variant_letter in variants:
         Cls = VARIANTS[variant_letter]
         for model_spec in models:
@@ -139,22 +86,19 @@ def run(variants: List[str], models: List[str], projects: List[str],
                 provider = get_provider(model_spec)
             except Exception as e:
                 rows.append({"variant": variant_letter, "model": model_spec, "project": "*",
-                             "gt_level": gt_level,
                              "error": f"provider init: {e}"})
                 continue
             pipeline = Cls(provider)
-            partial_rows: List[Dict] = []
             for proj in projects:
                 pdf = PROJECTS.get(proj)
                 if not pdf or not Path(pdf).exists():
                     rows.append({"variant": variant_letter, "model": model_spec, "project": proj,
-                                 "gt_level": gt_level, "error": "pdf missing"})
+                                 "error": "pdf missing"})
                     continue
                 try:
                     result = pipeline.run(pdf, project=proj)
                 except Exception as e:
                     rows.append({"variant": variant_letter, "model": model_spec, "project": proj,
-                                 "gt_level": gt_level,
                                  "error": f"{type(e).__name__}: {e}",
                                  "traceback": traceback.format_exc()[:500]})
                     continue
@@ -162,60 +106,51 @@ def run(variants: List[str], models: List[str], projects: List[str],
                     "variant": variant_letter,
                     "model": model_spec,
                     "project": proj,
-                    "gt_level": gt_level,
                     "elapsed_sec": round(result.elapsed_sec, 2),
                     "cost_usd": round(result.cost_usd, 4),
                     "n_units": sum(u.qty for u in result.units),
                     "n_groups": len({(u.kind, tuple(p.width_in for p in u.panels)) for u in result.units}),
                 }
-                gt_path = gt_map.get(proj)
+                gt_path = GROUND_TRUTH.get(proj)
                 if gt_path and Path(gt_path).exists():
                     gt_units = _load_gt_units(gt_path)
                     metrics = evaluate(result.units, gt_units, gt_frames_total=_frames_total(gt_path))
                     row.update(metrics.to_dict())
-                rows.append(row); partial_rows.append(row)
+                rows.append(row)
                 spent += float(row.get("cost_usd") or 0)
                 if budget_usd and spent >= budget_usd:
                     rows.append({"variant": "*", "model": "*", "project": "*",
-                                 "gt_level": gt_level,
                                  "error": f"budget cap ${budget_usd} hit; spent ${spent:.2f}"})
                     break
             else:
-                if not canonical and partial_rows:
-                    _write_csv(partial_rows, _per_run_csv(out_dir, variant_letter, model_spec))
                 continue
-            if not canonical and partial_rows:
-                _write_csv(partial_rows, _per_run_csv(out_dir, variant_letter, model_spec))
             break
         else:
             continue
         break
-    # Always write a combined CSV at out_csv. With canonical=False this is
-    # the "all rows from THIS process" view. Use eval/merge_leaderboard.py
-    # to fuse across processes.
-    _write_csv(rows, out_csv)
-    _render_html(rows, _pick_winner(rows, measure_project=measure_project, gt_level=gt_level), out_html,
-                 measure_project=measure_project, gt_level=gt_level)
+    Path(out_csv).parent.mkdir(parents=True, exist_ok=True)
+    if rows:
+        fields = sorted({k for r in rows for k in r.keys()})
+        with open(out_csv, "w", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, fieldnames=fields)
+            w.writeheader()
+            w.writerows(rows)
+    _render_html(rows, _pick_winner(rows), out_html)
     return rows
 
 
-def _render_html(rows: List[Dict], winner: Optional[Dict], path: str,
-                 *, measure_project: str = "745", gt_level: str = "extraction") -> None:
-    cols = ["variant", "model", "project", "gt_level", "group_f1", "qty_mae",
-            "unit_count_error", "glass_acc", "egress_acc",
-            "hallucination_rate", "cost_usd", "elapsed_sec", "error"]
+def _render_html(rows: List[Dict], winner: Optional[Dict], path: str) -> None:
+    cols = ["variant", "model", "project", "group_f1", "qty_mae", "unit_count_error",
+            "glass_acc", "egress_acc", "hallucination_rate", "cost_usd", "elapsed_sec", "error"]
     head = "".join(f"<th>{c}</th>" for c in cols)
     body = ""
     for r in rows:
-        cls = "winner" if winner and all(r.get(k) == winner.get(k) for k in ("variant", "model", "project", "gt_level")) else ""
+        cls = "winner" if winner and all(r.get(k) == winner.get(k) for k in ("variant", "model", "project")) else ""
         cells = "".join(f"<td>{r.get(c, '')}</td>" for c in cols)
         body += f"<tr class=\"{cls}\">{cells}</tr>"
     win_block = ""
     if winner:
-        win_block = (f"<p><strong>Winner:</strong> Variant {winner['variant']} / {winner['model']} "
-                     f"on {measure_project} ({gt_level}) — "
-                     f"group_f1={winner.get('group_f1', 0):.3f}, "
-                     f"qty_mae={winner.get('qty_mae', 0):.2f}.</p>")
+        win_block = f"<p><strong>Winner:</strong> Variant {winner['variant']} / {winner['model']} on 4006 — group_f1={winner.get('group_f1', 0):.3f}, qty_mae={winner.get('qty_mae', 0):.2f}.</p>"
     html = f"""<!DOCTYPE html><html><head><meta charset="utf-8"><title>blueprint-takeoff leaderboard</title>
 <style>
 body{{font-family:system-ui,sans-serif;padding:24px;max-width:1280px;margin:auto}}
@@ -235,16 +170,11 @@ th{{background:#f5f5f5}}tr.winner{{background:#e8f5e9;font-weight:600}}
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--variants", default="A,B,C,D,E,F")
-    ap.add_argument("--models", default="gemini:gemini-3.1-pro-preview,anthropic:claude-opus-4-8,openai:gpt-5.5,azure:gpt-4o,azure:gpt-4.1-nano")
-    ap.add_argument("--projects", default="745,4006,321,1729,3122")
+    ap.add_argument("--models", default="gemini:gemini-3.1-pro-preview,anthropic:claude-opus-4-7,openai:gpt-5.5,azure:gpt-4o,azure:gpt-4.1-nano")
+    ap.add_argument("--projects", default="4006,745,321,1729,3122")
     ap.add_argument("--out-csv", default="runs/leaderboard.csv")
     ap.add_argument("--out-html", default="runs/leaderboard.html")
     ap.add_argument("--budget-usd", type=float, default=0.0, help="Hard cap; 0 = no cap.")
-    ap.add_argument("--canonical", action="store_true",
-                    help="Single-file CSV write (legacy). Default: per-(variant×model) partials.")
-    ap.add_argument("--gt-level", default="extraction", choices=["extraction", "offer"])
-    ap.add_argument("--measure-project", default="745",
-                    help="Project used to pick the winner (default 745).")
     args = ap.parse_args(argv)
     rows = run(
         variants=args.variants.split(","),
@@ -252,9 +182,6 @@ def main(argv=None) -> int:
         projects=args.projects.split(","),
         out_csv=args.out_csv, out_html=args.out_html,
         budget_usd=args.budget_usd,
-        canonical=args.canonical,
-        gt_level=args.gt_level,
-        measure_project=args.measure_project,
     )
     print(f"Wrote {args.out_csv} ({len(rows)} rows)")
     return 0
