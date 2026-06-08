@@ -16,7 +16,10 @@ from datetime import datetime
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.schema import Unit
 from eval.metrics import evaluate
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    def load_dotenv(): pass
 load_dotenv()
 
 REPO = Path(__file__).resolve().parents[1]
