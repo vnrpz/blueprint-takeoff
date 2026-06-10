@@ -66,15 +66,35 @@ def detect_profile(text: str) -> Optional[str]:
     return None
 
 
-def analyze_pdf(path: str) -> RouteSignals:
-    """Compute routing signals from a PDF using PyMuPDF (text only — light).
+_UNIT_TABLE_RX = re.compile(r"rough\s+opening", re.I)
 
-    A 'schedule sheet' = a page whose text matches 'window/door schedule'.
-    schedule_is_vector = that page yields a non-trivial amount of vector text
-    (real characters, not just a scanned image with a caption).
-    Handwriting is heuristic here (very low text density across pages); the
-    pipeline may upgrade with a VLM check when ambiguous.
-    """
+
+def _has_unit_table(text: str) -> bool:
+    up = text.upper()
+    if _SCHEDULE_RX.search(text):
+        return True
+    return ("ROUGH OPENING" in up) and (("UNIT" in up) or ("MARK" in up) or "WINDOW" in up or "DOOR" in up)
+
+
+def _vlm_classify_raster(path: str, page_index: int, provider_spec: str = "anthropic:claude-opus-4-8") -> str:
+    try:
+        from src.pdf_utils import rasterize
+        from src import vlm
+        pgs = rasterize(path, "/tmp/router_cls", dpi=200, pages=[page_index])
+        prompt = ("Look at this single construction-drawing page. Answer with EXACTLY one token: "
+                  "TABLE if a printed WINDOW/DOOR SCHEDULE TABLE is present (grid of rows with marks/sizes/qty); "
+                  "HANDWRITTEN if the page is predominantly handwritten notes or a hand sketch; "
+                  "PLAN otherwise. One token only.")
+        r = vlm.get_provider(provider_spec).extract(str(pgs[0].image_path), prompt)
+        return (r.raw_text or "").strip().upper().split()[0] if (r.raw_text or "").strip() else "PLAN"
+    except Exception:
+        return "PLAN"
+
+
+def analyze_pdf(path: str, *, vlm_for_raster: bool = True) -> RouteSignals:
+    """Compute routing signals. Detects vector unit/schedule tables (incl. order
+    forms with a Rough-Opening column), and for near-text-free raster docs uses a
+    VLM to tell a printed schedule table (raster-table) from handwriting."""
     import fitz  # PyMuPDF
 
     doc = fitz.open(path)
@@ -90,14 +110,32 @@ def analyze_pdf(path: str) -> RouteSignals:
         char_counts.append(len(t.strip()))
         if len(t.strip()) > 40:
             vector_pages += 1
-        if sched_idx is None and _SCHEDULE_RX.search(t):
+        if sched_idx is None and _has_unit_table(t) and len(t.strip()) > 200:
             sched_idx = i
-            # schedule is vector if the schedule page itself carries real text
-            sched_vector = len(t.strip()) > 200
+            sched_vector = True
     joined = "\n".join(all_text)
     vector_frac = vector_pages / n
-    # handwriting heuristic: almost no extractable text anywhere
-    is_hand = (vector_frac < 0.15) and (max(char_counts) < 120)
+    is_hand = False
+    if sched_idx is None and vector_frac < 0.15 and max(char_counts) < 120:
+        if vlm_for_raster:
+            # Vote over a few sampled pages: a printed schedule TABLE or
+            # predominantly HANDWRITTEN content anywhere routes the doc.
+            sample = sorted(set([0, n // 2, n - 1]))[:3]
+            table_pg = None
+            hand_votes = 0
+            for pi in sample:
+                v = _vlm_classify_raster(path, pi)
+                if v.startswith("TABLE") and table_pg is None:
+                    table_pg = pi
+                elif v.startswith("HAND"):
+                    hand_votes += 1
+            if table_pg is not None:
+                sched_idx = table_pg
+                sched_vector = False
+            elif hand_votes > 0:
+                is_hand = True
+        else:
+            is_hand = max(char_counts) < 120
     return RouteSignals(
         vector_page_frac=vector_frac,
         has_schedule_sheet=sched_idx is not None,
@@ -106,7 +144,6 @@ def analyze_pdf(path: str) -> RouteSignals:
         notation_profile=detect_profile(joined),
         schedule_page_index=sched_idx,
     )
-
 
 def route_pdf(path: str) -> Route:
     return classify(analyze_pdf(path))
