@@ -1,0 +1,269 @@
+{
+  "groups": [
+    {
+      "mark": "OFR",
+      "units": [
+        {
+          "mark": "1",
+          "width": 72.5,
+          "height": 88.5,
+          "rough_opening_width": 73.25,
+          "rough_opening_height": 89.25,
+          "qty": 21,
+          "glass": "mixed",
+          "egress": true
+        },
+        {
+          "mark": "2.1",
+          "width": 72.5,
+          "height": 88.5,
+          "rough_opening_width": 73.25,
+          "rough_opening_height": 89.25,
+          "qty": 42,
+          "glass": "mixed",
+          "egress": true
+        },
+        {
+          "mark": "2.2",
+          "width": 36.1875,
+          "height": 96.0,
+          "rough_opening_width": 73.25,
+          "rough_opening_height": 89.25,
+          "qty": 42,
+          "glass": "tempered",
+          "egress": false
+        },
+        {
+          "mark": "2.3",
+          "width": 36.1875,
+          "height": 96.0,
+          "rough_opening_width": 73.25,
+          "rough_opening_height": 89.25,
+          "qty": 42,
+          "glass": "tempered",
+          "egress": true
+        },
+        {
+          "mark": "4.1",
+          "width": 36.1875,
+          "height": 96.0,
+          "rough_opening_width": 73.25,
+          "rough_opening_height": 96.75,
+          "qty": 24,
+          "glass": "tempered",
+          "egress": true
+        },
+        {
+          "mark": "4.2",
+          "width": 36.1875,
+          "height": 96.0,
+          "rough_opening_width": 73.25,
+          "rough_opening_height": 96.75,
+          "qty": 24,
+          "glass": "tempered",
+          "egress": false
+        },
+        {
+          "mark": "4.3",
+          "width": 48.1875,
+          "height": 88.5,
+          "rough_opening_width": 73.25,
+          "rough_opening_height": 96.75,
+          "qty": 24,
+          "glass": "mixed",
+          "egress": true
+        },
+        {
+          "mark": "6.1",
+          "width": 48.1875,
+          "height": 88.5,
+          "rough_opening_width": 48.9375,
+          "rough_opening_height": 89.25,
+          "qty": 38,
+          "glass": "mixed",
+          "egress": true
+        },
+        {
+          "mark": "6.2",
+          "width": 143.875,
+          "height": 96.0,
+          "rough_opening_width": 48.9375,
+          "rough_opening_height": 89.25,
+          "qty": 38,
+          "glass": "tempered",
+          "egress": false
+        },
+        {
+          "mark": "6.3",
+          "width": 106.8125,
+          "height": 96.0,
+          "rough_opening_width": 48.9375,
+          "rough_opening_height": 89.25,
+          "qty": 38,
+          "glass": "tempered",
+          "egress": false
+        },
+        {
+          "mark": "6.4",
+          "width": 36.9375,
+          "height": 96.0,
+          "rough_opening_width": 48.9375,
+          "rough_opening_height": 89.25,
+          "qty": 38,
+          "glass": "tempered",
+          "egress": true
+        },
+        {
+          "mark": "8.1",
+          "width": 42.0,
+          "height": 88.5,
+          "rough_opening_width": 42.75,
+          "rough_opening_height": 89.25,
+          "qty": 10,
+          "glass": "mixed",
+          "egress": true
+        },
+        {
+          "mark": "8.2",
+          "width": 72.5,
+          "height": 68.5,
+          "rough_opening_width": 42.75,
+          "rough_opening_height": 89.25,
+          "qty": 10,
+          "glass": "annealed",
+          "egress": true
+        },
+        {
+          "mark": "10.1",
+          "width": 72.5,
+          "height": 68.5,
+          "rough_opening_width": 73.25,
+          "rough_opening_height": 69.25,
+          "qty": 2,
+          "glass": "annealed",
+          "egress": true
+        },
+        {
+          "mark": "10.2",
+          "width": 18.9375,
+          "height": 96.0,
+          "rough_opening_width": 73.25,
+          "rough_opening_height": 69.25,
+          "qty": 2,
+          "glass": "tempered",
+          "egress": false
+        },
+        {
+          "mark": "10.3",
+          "width": 37.4375,
+          "height": 96.0,
+          "rough_opening_width": 73.25,
+          "rough_opening_height": 69.25,
+          "qty": 2,
+          "glass": "tempered",
+          "egress": true
+        },
+        {
+          "mark": "12.1",
+          "width": 36.1875,
+          "height": 96.0,
+          "rough_opening_width": 73.25,
+          "rough_opening_height": 96.75,
+          "qty": 1,
+          "glass": "tempered",
+          "egress": false
+        },
+        {
+          "mark": "12.2",
+          "width": 36.1875,
+          "height": 96.0,
+          "rough_opening_width": 73.25,
+          "rough_opening_height": 96.75,
+          "qty": 1,
+          "glass": "tempered",
+          "egress": true
+        },
+        {
+          "mark": "12.3",
+          "width": 40.5,
+          "height": 96.0,
+          "rough_opening_width": 73.25,
+          "rough_opening_height": 96.75,
+          "qty": 1,
+          "glass": "tempered",
+          "egress": true
+        },
+        {
+          "mark": "14.1",
+          "width": 68.5,
+          "height": 88.5,
+          "rough_opening_width": 69.25,
+          "rough_opening_height": 89.25,
+          "qty": 1,
+          "glass": "tempered",
+          "egress": false
+        },
+        {
+          "mark": "14.2",
+          "width": 124.5,
+          "height": 88.5,
+          "rough_opening_width": 69.25,
+          "rough_opening_height": 89.25,
+          "qty": 1,
+          "glass": "tempered",
+          "egress": false
+        },
+        {
+          "mark": "16.1",
+          "width": 128.4375,
+          "height": 88.5,
+          "rough_opening_width": 214.75,
+          "rough_opening_height": 89.25,
+          "qty": 1,
+          "glass": "tempered",
+          "egress": false
+        },
+        {
+          "mark": "16.2",
+          "width": 85.4375,
+          "height": 88.5,
+          "rough_opening_width": 214.75,
+          "rough_opening_height": 89.25,
+          "qty": 1,
+          "glass": "tempered",
+          "egress": false
+        },
+        {
+          "mark": "16.3",
+          "width": 32.1875,
+          "height": 88.5,
+          "rough_opening_width": 214.75,
+          "rough_opening_height": 89.25,
+          "qty": 1,
+          "glass": "mixed",
+          "egress": true
+        },
+        {
+          "mark": "18",
+          "width": 38.375,
+          "height": 96.0,
+          "rough_opening_width": 39.125,
+          "rough_opening_height": 96.75,
+          "qty": 6,
+          "glass": "tempered",
+          "egress": true
+        }
+      ]
+    }
+  ],
+  "total_qty": 146,
+  "reconciled": true,
+  "_provenance": {
+    "source": "4006_N_Sheridan-OFR-0573-2025-2.pdf",
+    "method": "deterministic vector-table parse (branch 1)",
+    "verified_by": "line reconciliation unit_price*qty==line_total for all 10 offer lines",
+    "n_units": 25,
+    "total_qty": 146,
+    "confidence": "high (price-reconciled offer document)"
+  }
+}
