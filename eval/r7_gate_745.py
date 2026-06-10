@@ -77,6 +77,16 @@ def main():
               f"matched={m.matched_groups} fp={m.fp_groups} fn={m.fn_groups}")
         gate = (m.group_f1>=0.70 and m.unit_count_error<=0.05)
         print(f" GATE {'TAKEN' if gate else 'NOT taken'} (need f1>=0.70 AND uce<=0.05)")
+        json.dump({"spec": spec, "gate_taken": bool(gate), "n_units": len(units),
+                   "pred_total_qty": sum(u.qty for u in units), "gt_total_qty": gt_total,
+                   "thresholds": {"group_f1>=": 0.70, "unit_count_error<=": 0.05},
+                   "metrics": {"group_f1": round(m.group_f1, 4),
+                               "unit_count_error": round(m.unit_count_error, 4),
+                               "precision": round(m.group_precision, 4),
+                               "recall": round(m.group_recall, 4),
+                               "matched_groups": m.matched_groups,
+                               "fp_groups": m.fp_groups, "fn_groups": m.fn_groups}},
+                  open("eval/gate_745_result.json", "w"), indent=2)
     # consensus: rows where both models agree on (mark,size_code,qty)
     ok=[(k,v) for k,v in results.items() if v]
     if len(ok)>=2:
