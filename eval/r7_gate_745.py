@@ -75,8 +75,8 @@ def main():
         print(f" group_f1={m.group_f1:.3f} unit_count_error={m.unit_count_error:.3f} "
               f"precision={m.group_precision:.3f} recall={m.group_recall:.3f} "
               f"matched={m.matched_groups} fp={m.fp_groups} fn={m.fn_groups}")
-        gate = (m.group_f1>=0.70 and m.unit_count_error<=0.05)
-        print(f" GATE {'TAKEN' if gate else 'NOT taken'} (need f1>=0.70 AND uce<=0.05)")
+        gate = (m.group_f1>=0.90 and m.unit_count_error<=0.05)
+        print(f" GATE {'TAKEN' if gate else 'NOT taken'} (need f1>=0.90 AND uce<=0.05)")
         json.dump({"spec": spec, "gate_taken": bool(gate), "n_units": len(units),
                    "pred_total_qty": sum(u.qty for u in units), "gt_total_qty": gt_total,
                    "thresholds": {"group_f1>=": 0.70, "unit_count_error<=": 0.05},
@@ -102,7 +102,7 @@ def main():
             mc=evaluate(cu, gt)
             print(f"\n=== CONSENSUS (both agree, {len(agree)} rows) ===")
             print(f" group_f1={mc.group_f1:.3f} unit_count_error={mc.unit_count_error:.3f} pred_total={sum(u.qty for u in cu)}")
-            print(f" GATE {'TAKEN' if (mc.group_f1>=0.70 and mc.unit_count_error<=0.05) else 'NOT taken'}")
+            print(f" GATE {'TAKEN' if (mc.group_f1>=0.90 and mc.unit_count_error<=0.05) else 'NOT taken'}")
     print("\nDONE")
 
 main()

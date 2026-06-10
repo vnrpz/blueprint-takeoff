@@ -5,7 +5,7 @@
   "pred_total_qty": 24,
   "gt_total_qty": 24,
   "thresholds": {
-    "group_f1>=": 0.7,
+    "group_f1>=": 0.9,
     "unit_count_error<=": 0.05
   },
   "metrics": {
