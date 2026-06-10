@@ -1,0 +1,20 @@
+{
+  "spec": "anthropic:claude-opus-4-8",
+  "gate_taken": true,
+  "n_units": 8,
+  "pred_total_qty": 24,
+  "gt_total_qty": 24,
+  "thresholds": {
+    "group_f1>=": 0.9,
+    "unit_count_error<=": 0.05
+  },
+  "metrics": {
+    "group_f1": 1.0,
+    "unit_count_error": 0.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "matched_groups": 8,
+    "fp_groups": 0,
+    "fn_groups": 0
+  }
+}
