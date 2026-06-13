@@ -1,0 +1,87 @@
+name: CI
+
+# Logic + pipeline-machinery gates. No API keys, no real PDFs — those tests
+# self-skip via RUN_HEAVY / conftest.require_pdf, so this runs green on a clean
+# checkout. Mirrors the "CI-friendly" test gates documented in OPERATIONS.md.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install runtime + test deps (no provider SDKs needed for tests)
+        run: |
+          python -m pip install --upgrade pip
+          # Tests use MockProvider, so the heavy VLM SDKs are not required.
+          pip install \
+            "PyMuPDF>=1.24" "pdfplumber>=0.11" "Pillow>=10" \
+            "opencv-python-headless>=4.9" "numpy>=1.26" "scipy>=1.12" \
+            "pandas>=2.2" "pydantic>=2.6" "python-dotenv>=1.0" "tqdm>=4.66" \
+            "reportlab>=4.0" "jinja2>=3.1" \
+            "pytest>=8.0" "pytest-cov>=5.0"
+
+      - name: Run test suite
+        env:
+          RUN_HEAVY: "0"
+        run: |
+          pytest tests/ -v --tb=short
+
+  lint-imports:
+    # Cheap guard: every src/ + eval/ module must import without a real PDF,
+    # API key, or network — catches accidental import-time side effects.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install \
+            "PyMuPDF>=1.24" "pdfplumber>=0.11" "Pillow>=10" \
+            "opencv-python-headless>=4.9" "numpy>=1.26" "scipy>=1.12" \
+            "pandas>=2.2" "pydantic>=2.6" "python-dotenv>=1.0" "tqdm>=4.66" \
+            "reportlab>=4.0" "jinja2>=3.1"
+      - name: Import all first-party modules
+        run: |
+          python - <<'PY'
+          import importlib, pkgutil
+          import src, eval
+          failed = []
+          for pkg in (src, eval):
+              for m in pkgutil.walk_packages(pkg.__path__, pkg.__name__ + "."):
+                  name = m.name
+                  # provider modules need their vendor SDK (anthropic/openai/google) —
+                  # they are imported lazily in production and skipped here.
+                  if ".vlm." in name and name.rsplit(".", 1)[-1].endswith("_provider"):
+                      continue
+                  try:
+                      importlib.import_module(name)
+                  except Exception as e:  # noqa: BLE001
+                      failed.append((name, repr(e)))
+          if failed:
+              for n, e in failed:
+                  print(f"IMPORT FAIL {n}: {e}")
+              raise SystemExit(1)
+          print("all first-party modules import cleanly")
+          PY

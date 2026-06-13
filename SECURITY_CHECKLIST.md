@@ -14,7 +14,7 @@ Per TZ §17 QA protocol. Re-run before any release.
 
 - [x] `src/credentials.py` reads keys from environment + optional `bw` CLI; default `.env` is gitignored.
 - [x] `_Secret(str)` masks the value in `__repr__` so accidental `print(creds)` never leaks.
-- [x] Tests assert no key string appears in `caplog` output (TODO when CI is wired).
+- [x] Tests assert no key string appears in `caplog` output (`tests/test_credentials.py`, run by CI in `.github/workflows/ci.yml`).
 - [x] No credentials ever written into `runs/` or `reports/`.
 
 ## File system
