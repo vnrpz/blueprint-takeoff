@@ -1,6 +1,12 @@
 import os, sys, json
-sys.path.insert(0, "/opt/bp_r7/repo")
-os.chdir("/opt/bp_r7/repo")
+from pathlib import Path
+
+# Resolve repo root relative to this file (no machine-specific absolute paths).
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+os.chdir(_REPO_ROOT)
+
 from src.pdf_utils import rasterize
 from src.notation import decode, NotationError
 from src.schema import Unit, Panel
@@ -79,7 +85,7 @@ def main():
         print(f" GATE {'TAKEN' if gate else 'NOT taken'} (need f1>=0.90 AND uce<=0.05)")
         json.dump({"spec": spec, "gate_taken": bool(gate), "n_units": len(units),
                    "pred_total_qty": sum(u.qty for u in units), "gt_total_qty": gt_total,
-                   "thresholds": {"group_f1>=": 0.70, "unit_count_error<=": 0.05},
+                   "thresholds": {"group_f1>=": 0.90, "unit_count_error<=": 0.05},
                    "metrics": {"group_f1": round(m.group_f1, 4),
                                "unit_count_error": round(m.unit_count_error, 4),
                                "precision": round(m.group_precision, 4),
@@ -105,4 +111,6 @@ def main():
             print(f" GATE {'TAKEN' if (mc.group_f1>=0.90 and mc.unit_count_error<=0.05) else 'NOT taken'}")
     print("\nDONE")
 
-main()
+
+if __name__ == "__main__":
+    main()

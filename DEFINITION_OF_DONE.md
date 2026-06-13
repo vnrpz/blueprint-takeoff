@@ -18,8 +18,10 @@ Per TZ §17. A green tick means automated, not manual.
 
 ## Tests
 
-- [x] `pytest tests/ -v --tb=short` — 29 passed, 37 skipped (skipped = real-PDF / heavy tests).
+- [x] `pytest tests/ -v --tb=short` — 66 passed, 43 skipped (skipped = real-PDF / heavy tests). Green on a clean checkout (no PDFs, no keys); enforced by CI (`.github/workflows/ci.yml`).
 - [x] `tests/test_parsing.py`, `tests/test_matching.py`, `tests/test_metrics.py` cover the pure logic.
+- [x] `tests/test_credentials.py` — `_Secret` masks its value in repr and never leaks into log output.
+- [x] `tests/test_branch1_ofr.py` — branch-1 parsing/normalization + `to_schema` covered on synthetic input (real-PDF e2e skips when the gitignored offer PDF is absent).
 - [x] `tests/test_error_injection.py` proves the oracle-detector path hits recall=1.0 and the silent-detector path hits 0.0 — gate is meaningful.
 - [x] `tests/test_eval_gate_4006.py` proves the gate passes on perfect predictions and fails on corrupted predictions.
 - [x] `tests/test_pipeline_smoke.py` exercises all 6 variants end-to-end on a synthetic PDF with MockProvider — no crashes, every output round-trips through `Unit.from_dict`.
@@ -37,6 +39,7 @@ Per TZ §17. A green tick means automated, not manual.
 - [x] `PLAN.md` checked in.
 - [x] `SECURITY_CHECKLIST.md` checked in.
 - [x] `DEFINITION_OF_DONE.md` (this file).
+- [x] CI wired (`.github/workflows/ci.yml`): runs the full suite on push/PR across Python 3.10–3.12 and asserts every first-party module imports without a PDF, key, or network.
 - [ ] Eval gate prog run on 4006, leaderboard rendered, winner declared. (BLOCKED on PDFs + DO droplet.)
 - [ ] PDF report `reports/blueprint_takeoff_report.pdf` produced from real run.
 - [ ] Delivery posted to TG @vtlik with: winner, key 4006 metrics, gate pass/fail, viewer screenshots, leaderboard link, error injection summary.
